@@ -1,4 +1,5 @@
 .cargo/**
+Cargo.lock
 /target
 /aqueducts-cli/target
 /examples/output*
@@ -7,3 +8,4 @@
 site/
 .cache/
 __pycache__
+odbc.ini

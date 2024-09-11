@@ -1,0 +1,25 @@
+# Run `sqlite3 examples/odbc/sqlite/example.db < examples/odbc/sqlite/init.sql`
+# to initialize the example DB
+sources:
+  - type: Odbc
+    name: data
+    connection_string: DSN={sqlite};Database=./examples/odbc/sqlite/example.db;
+    query: SELECT * FROM sensor_readings_daily_avg
+
+stages:
+  - - name: monthly_sensor_readings_avg
+      query: >
+        select
+          date_trunc('month', cast(day as timestamp)) month,
+          avg(temperature) temperature_avg,
+          avg(humidity) humidity_avg
+        from data
+        group by 1
+        order by 1
+      show: 20
+
+destination:
+  type: Odbc
+  name: monthly_sensor_readings_avg
+  connection_string: DSN={sqlite};Database=./examples/odbc/sqlite/example.db;
+  batch_size: 100
